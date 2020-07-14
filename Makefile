@@ -6,7 +6,7 @@ CFLAGS	+=	$(CC_OPT) $(CC_DBG) $(CC_INC)
 DESTLIB	=	/usr/local/lib
 DESTINC	=	/usr/local/include
 
-all:	libnkf.a libnkf.so
+all:	libnkf.a libnkf.so.1.0
 
 libnkf.oa:	libnkf.c libnkf.h
 	$(CC) $(CFLAGS) -o $@ -c $<
@@ -18,13 +18,13 @@ libnkf.a:	libnkf.oa
 	ar rv $@ $?
 	ranlib $@
 
-libnkf.so:	libnkf.os
-	$(CC) -shared -Wl,-soname,libnkf.so.1 -o libnkf.so.1.0 libnkf.os
+libnkf.so.1.0:	libnkf.os
+	$(CC) -shared -Wl,-soname,libnkf.so.1 -o libnkf.so.1.0 $?
 
 clean:
 	rm -f *.o* *.a *.so*
 
-install:
+install:	all
 	install -s libnkf.a $(DESTLIB)
 	install -s libnkf.so.1.0 $(DESTLIB)
 	ldconfig $(DESTLIB)
