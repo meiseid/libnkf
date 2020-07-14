@@ -1,17 +1,32 @@
-TARGET	=	libnkf.a
-SRCS	=	libnkf.c
-OBJS	=	${SRCS:.c=.o}
 CC		=	gcc
 #CC_DBG	+=	-g
 CC_OPT	+=
 CC_INC	+=
-CFLAGS	=	${CC_OPT} ${CC_DBG} ${CC_INC}
+CFLAGS	+=	$(CC_OPT) $(CC_DBG) $(CC_INC)
+DESTLIB	=	/usr/local/lib
+DESTINC	=	/usr/local/include
 
-all::	${TARGET}
-${TARGET}::	${OBJS}
-	ar ruv $@ $?
+all:	libnkf.a libnkf.so
+
+libnkf.oa:	libnkf.c libnkf.h
+	$(CC) $(CFLAGS) -o $@ -c $<
+
+libnkf.os:	libnkf.c libnkf.h
+	$(CC) $(CFLAGS) -fPIC -o $@ -c $<
+
+libnkf.a:	libnkf.oa
+	ar rv $@ $?
 	ranlib $@
 
-clean::
-	-rm -f ${TARGET}
-	-rm -f ${OBJS}
+libnkf.so:	libnkf.os
+	$(CC) -shared -Wl,-soname,libnkf.so.1 -o libnkf.so.1.0 libnkf.os
+
+clean:
+	rm -f *.o* *.a *.so*
+
+install:
+	install -s libnkf.a $(DESTLIB)
+	install -s libnkf.so.1.0 $(DESTLIB)
+	ldconfig $(DESTLIB)
+	ln -f -s $(DESTLIB)/libnkf.so.1 $(DESTLIB)/libnkf.so
+	install -m 0644 libnkf.h $(DESTINC)

@@ -91,8 +91,12 @@ pynkf_putchar(int c)
 }
 
 #define PERL_XS 1
+/*
 #include "../utf8tbl.c"
 #include "../nkf.c"
+*/
+#include "../nkf/utf8tbl.c"
+#include "../nkf/nkf.c"
 
 /*
 static PyObject *
