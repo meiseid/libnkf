@@ -25,8 +25,8 @@ clean:
 	rm -f *.o* *.a *.so*
 
 install:	all
-	install -s libnkf.a $(DESTLIB)
-	install -s libnkf.so.1.0 $(DESTLIB)
+	install libnkf.a $(DESTLIB)
+	install libnkf.so.1.0 $(DESTLIB)
 	ldconfig $(DESTLIB)
 	ln -f -s $(DESTLIB)/libnkf.so.1 $(DESTLIB)/libnkf.so
 	install -m 0644 libnkf.h $(DESTINC)
